@@ -1,0 +1,153 @@
+public class SFTPClient {
+  
+      private Session session = null;
+  
+      @Value("${private-key-path}")
+      private String privateKeyPath;
+      private int count=0;
+      pribate int c2=0;
+  
+      public void connect() throws JSchException {
+          JSch jsch = new JSch();
+ 
+         
+          jsch.addIdentity("private-key-path);
+  
+          session = jsch.getSession(server);
+
+         
+          session = jsch.getSession("username", host, port);
+          session.setPassword("the-password");
+
+          session.setConfig("StrictHostKeyChecking", "no");
+          session.connect();
+      }
+      
+       public void download(String dir,String dest) throws JSchException, SftpException {
+           int counter;
+           int counter2;
+          Channel channel = session.openChannel("sftp");
+          channel.connect();
+          ChannelSftp sftpChannel = (ChannelSftp) channel;
+          ChannelSftp.cd(SFTPWORKINGDIR)
+          Vector<ChannelSftp.LsEntry> list = ChannelSftp.ls("*.cvs");
+          if(count == 0)
+          {
+              count=list.size();
+              for(ChannelSftp.LsEntry entry : list) {
+    channelSftp.get(entry.getFilename(), dest + entry.getFilename());
+}
+          }
+          ChannelSftp.LsEntry entry;
+          else
+          {
+              counter=list.size();
+              counter2=counter//duplicasy removed if files are saved in latest order 
+              counter=counter-count;
+              count=counter2;
+              
+          for (int index = counter; index <= list.size(); index++)
+          {
+              string s=list.get(index).entry.getFilename()
+              channelSftp.get(s,dest+s);
+          }
+          }
+              
+
+          sftpChannel.exit();
+          parseCSV(dest);
+      }
+      public void parseCSV(String dest)
+      {
+          int counter;
+           int counter2;
+           File directoryPath = new File(dest);
+      //List of all files and directories
+      String contents[] = directoryPath.list();
+      if(c2==0)
+      {
+          c2=contents.length();
+      counter=0;
+          
+      }
+      else
+      {
+          counter=contents.length();
+          counter2=counter;
+          counter=counter-c2;
+          c2=counter2;
+          
+      }
+       for(int i=counter; i<=contents.length; i++) {
+         String csvFile = dest+contents[i];
+        BufferedReader br = null;
+        String line = "";
+        String cvsSplitBy = ",";
+
+        try {
+
+            br = new BufferedReader(new FileReader(csvFile));
+            while ((line = br.readLine()) != null) {
+
+                // use comma as separator
+                String[] country = line.split(cvsSplitBy)
+                insertDb(country);
+      }
+        }
+        }
+      }
+      
+      public void insertDb(String Country[])
+      {
+           String JdbcURL = "jdbc:mysql://localhost:3306/sample?useSSL=false";
+      String Username = "root";
+      String password = "123456";
+      Connection con = null;
+      PreparedStatement pstmt = null
+      String query="INSERT INTO CSV values(?,?,?,?,?)"
+      try {
+         con = DriverManager.getConnection(JdbcURL, Username, password);
+         pstmt = con.prepareStatement(query);
+          pstmt.setInt(1,country[3]);
+          pstmt.setInt(1,country[3]);
+          pstmt.setString(1,country[3]);
+          pstmt.setString(1,country[3]);
+          pstmt.setString(1,country[3]);
+          int i=stmt.executeUpdate();
+          con.close();
+      
+      }catch(Exception e){ System.out.println(e);}  
+      }
+      public static void main(String []args){
+          String dir ="directory ";
+          string dest="deststring";
+        SFTPClient sftpClient = new SFTPClient();
+ 
+  sftpClient.connect();
+  new java.util.Timer().schedule( 
+        new java.util.TimerTask() {
+            @Override
+            public void run() {
+                
+                sftpClient.download(directory,dest);
+            }
+        }, 
+        900000
+        
+);
+
+  
+     }
+
+     
+}
+
+
+create table CSV(
+   cell_id INT NOT NULL ,
+   call_attempts INT,
+   obj_name VARCHAR(200) ,
+   Gramalarity_period VARCHAR(40) ,
+   result_time DATE,
+   PRIMARY KEY ( tutorial_id )
+);
